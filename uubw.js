@@ -25,8 +25,10 @@ document.addEventListener('drop', async event => {
 })
 
 function timesheetIsActive () {
-    const tab = $('.x-tab.selected')
-    return tab && tab.innerText.indexOf('Timeliste ') === 0
+    return $$('a.u4-activitybreadcrumbitem-button')
+        .filter(isVisible)
+        .map(el => el.outerText.trim())
+        .some(text => text.includes('Timeliste '))
 }
 
 function readFile (file) {
