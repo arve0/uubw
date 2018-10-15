@@ -35,7 +35,7 @@ Importer timeliste til UBW fra CSV.
 - Linjer som starter med `;` blir ignorert.
 - Feltene er separert med tab.
 - Arbeidsordre som ikke har aktivitet fylles ut med `-`.
-- Dato har formatet `dd.mm`.
+- Dato har formatet `dd.mm` eller `Man`, `Tir`, `Ons`, `Tor`, `Fre`, `Lør`, `Søn`.
 
 
 ## Lisens
