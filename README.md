@@ -1,6 +1,6 @@
 # Unngå UBW
 
-Importer timeliste til UBW fra CSV.
+Importer timeliste til UBW fra tekstfil med [tab-separerte verdier](https://en.wikipedia.org/wiki/Tab-separated_values).
 
 [![](youtube.png)](https://www.youtube.com/watch?v=vziWaZY4MsQ)
 
@@ -17,25 +17,48 @@ Importer timeliste til UBW fra CSV.
 
 ## Bruk
 
-1. Lag timeliste i CSV.
+1. Lag timeliste i [TSV](https://en.wikipedia.org/wiki/Tab-separated_values) eller et regneark.
 
-    ```csv
-    ;Arbeidsordre	Aktivitet	Beskrivelse	Dato	Antall timer
-    32010000-1	-	Føre timer i UBW	15.10	100
-    32010000-1	-	Drikke kaffe	16.10	8
-    ```
+	```tsv
+	;Arbeidsordre	Aktivitet	Beskrivelse     	man	tir	ons	tor	fre	lør	søn
+	32010000-1  	-       	Føre timer i UBW	100
+	32010000-1  	-       	Drikke kaffe    		8
+	32010000-1  	-       	Profiiiiiit     			8
+	```
 
 2. Åpne timeføringen i UBW.
-3. Dra over CSV-filen til UBW.
+3. Dra over TSV-filen til UBW.
 4. Drikk kaffe og profiiiiiiit.
 
 
-## Filformat CSV
+## Filformat TSV
 
 - Linjer som starter med `;` blir ignorert.
-- Feltene er separert med tab.
-- Arbeidsordre som ikke har aktivitet fylles ut med `-`.
-- Dato har formatet `dd.mm` eller `Man`, `Tir`, `Ons`, `Tor`, `Fre`, `Lør`, `Søn`.
+- Verdiene er separert med tab.
+- La arbeidsordre som ikke har aktivitet være tom, eller bruk `-`.
+- Timene blir fylt en kolonne av gangen. Det vil si at første kolonne vanligvis
+  er mandag, så kommer tirsdag, osv.
+- Mellomrom før og etter verdier blir fjernet.
+
+
+## Korte og lange uker
+
+Noen uker er ekstra lange. Eksempelvis uke 43 i 2018, som er fra 22. oktober til 31. oktober.
+For lange uker trengs ekstra kolonner for å føre timene:
+
+```tsv
+;arbordre	aktivitet	beskrivelse	man	tir	ons	tor	fre	lør	søn	man	tir	ons
+32010000-1	-       	Lese epost	8	8	8	8	8			8	8	8
+```
+
+Når timene føres vil de ikke bli synlig. En må navigere seg i kalenderen
+for å kontrollere timene for alle dagene:
+
+![](lang-uke.png)
+
+Tilsvarende blir det for kort uke, bare med færre kolonner i TSV-filen. Om en fører i
+for mange kolonner, vil UBW vise summen, men når en lagrer valideres og korrigeres
+timelisten.
 
 
 ## Lisens

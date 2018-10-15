@@ -1,5 +1,3 @@
-const DELIMITER = '\t'
-
 // cancel dragover to allow dropping over other elements
 document.addEventListener('dragover', e => e.preventDefault())
 
@@ -9,19 +7,13 @@ document.addEventListener('drop', async event => {
     }
     event.preventDefault()
 
-    const csv = toArray(event.dataTransfer.items).find(i => i.type === 'text/csv')
-    if (!csv) {
-        return console.log('Fant ingen CSV fil.')
+    const tsv = toArray(event.dataTransfer.items).find(i => i.type === 'text/tab-separated-values')
+    if (!tsv) {
+        return console.warn('Fant ingen TSV fil, gjør ingenting.')
     }
 
-    const contents = await readFile(csv.getAsFile())
-    const timesheetEntries = contents.split('\n')
-        .filter(line => line[0] !== ';')
-        .map(line => line.split(DELIMITER))
-
-    for (const entry of timesheetEntries) {
-        await fillTimesheet(entry)
-    }
+    const contents = await readFile(tsv.getAsFile())
+    fillTimesheet(contents)
 })
 
 function timesheetIsActive () {
@@ -39,15 +31,26 @@ function readFile (file) {
     })
 }
 
-function getDays () {
-    const DAYS = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn']
-    return $$('[data-u4xtype="u4_numbercolumn"]')
-        .map(el => el.outerText.trim())
-        .filter(el => DAYS.some(day => el.includes(day)))
+async function fillTimesheet(tsv) {
+    const timesheetEntries = tsv.split('\n')
+        .filter(line => line[0] !== ';')
+        .map(line =>
+            line.split('\t')
+                .map(col => col.trim())
+        )
+
+    for (const entry of timesheetEntries) {
+        await fillTimesheetRow(entry)
+    }
 }
 
-async function fillTimesheet([ workorder, activity, description, date, amount ]) {
-    console.log([ workorder, activity, description, date, amount ].join(', '))
+async function fillTimesheetRow([ workorder, activity, description, ...hoursByDay ]) {
+    console.log([ workorder, activity, description, ...hoursByDay ].join(', '))
+
+    if (workorder === '') {
+        console.warn('Got empty workorder, skipping.')
+        return;
+    }
 
     click('a[data-qtip="Legg til arb.oppgave"]')
     await untilLoadingDone(1000)
@@ -61,7 +64,7 @@ async function fillTimesheet([ workorder, activity, description, date, amount ])
     codeElement.click()
     await untilLoadingDone()
 
-    if (activity !== '-') {
+    if (activity !== '-' && activity !== '') {
         const activityElement = await waitFor(`[data-recordid="${activity}"]`)
         activityElement.click()
     }
@@ -74,9 +77,16 @@ async function fillTimesheet([ workorder, activity, description, date, amount ])
     const inputRow = await waitFor('table[data-u4id="descriptionEditor"] input', tableView)
     inputRow.value = description
 
-    const dayColumn = getDays().findIndex(day => day.includes(date))
-    const amountInput = $(`input[name="regValue${dayColumn + 1}"]`) // regValue1 is first
-    amountInput.value = amount
+    for (let day = 1; day <= hoursByDay.length; day++) {
+        let amount = hoursByDay[day - 1]
+        if (amount === '' || isNaN(parseFloat(amount))) {
+            console.warn(`Got amount '${amount}' which is not a number, skipping`)
+            continue;
+        }
+        const amountInput = $(`input[name="regValue${day}"]`) // regValue1 is first day
+        // Does this hold true for week that starts at wednesday? Like 1. july 2018.
+        amountInput.value = amount
+    }
 }
 
 function $ (selector, element = document) {
