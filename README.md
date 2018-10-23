@@ -22,8 +22,10 @@ Importer timeliste til UBW fra tekstfil med [tab-separerte verdier](https://en.w
 	```tsv
 	;Arbeidsordre	Aktivitet	Beskrivelse     	man	tir	ons	tor	fre	lør	søn
 	32010000-1  	-       	Føre timer i UBW	100
-	32010000-1  	-       	Drikke kaffe    		8
-	32010000-1  	-       	Profiiiiiit     			8
+	32010000-1  	-       	Drikke kaffe    	  	8
+	32010000-1  	-       	Profiiiiiit     	  		8
+	ABSENCE     	-       	Lunsj for de med	0,5	0,5	0,5	0,5	0,5
+	ABSENCE     	-       	Lunsjpenger     	1 	1 	1 	1 	1
 	```
 
 2. Åpne timeføringen i UBW.
@@ -39,6 +41,12 @@ Importer timeliste til UBW fra tekstfil med [tab-separerte verdier](https://en.w
 - Timene blir fylt en kolonne av gangen. Det vil si at første kolonne vanligvis
   er mandag, så kommer tirsdag, osv.
 - Mellomrom før og etter verdier blir fjernet.
+
+
+## Fravær
+
+Bruk arbeidsordre `ABSENCE` for å legge inn fravær. Beskrivelsen brukes til å
+velge riktig type fravær.
 
 
 ## Korte og lange uker
