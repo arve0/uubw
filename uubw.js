@@ -52,6 +52,36 @@ async function fillTimesheetRow([ workorder, activity, description, ...hoursByDa
         return;
     }
 
+    if (workorder.indexOf('ABSENCE') === 0) {
+        await addAbsenceRow(description)
+    } else {
+        await addRow(workorder, activity, description)
+    }
+
+    for (let day = 1; day <= hoursByDay.length; day++) {
+        let amount = hoursByDay[day - 1]
+        if (amount === '') {
+            continue;
+        } else if (isNaN(parseFloat(amount))) {
+            console.warn(`Got amount '${amount}' which is not a number, skipping`)
+            continue;
+        }
+        const amountInput = $(`input[name="regValue${day}"]`) // regValue1 is first day
+        // Does this hold true for week that starts at wednesday? Like 1. july 2018.
+        amountInput.value = amount
+    }
+    await sleep(500)
+}
+
+async function addAbsenceRow (description) {
+    $('a[data-u4id="addAbsenceBtn"]').click()
+    await waitFor('input[placeholder="Type fravær"]')
+    getByText('tr[role="row"]', description).click()
+    getByText('a', 'Legg til i timeliste').click()
+    await untilLoadingDone()
+}
+
+async function addRow (workorder, activity, description) {
     click('a[data-qtip="Legg til arb.oppgave"]')
     await untilLoadingDone(1000)
 
@@ -74,19 +104,8 @@ async function fillTimesheetRow([ workorder, activity, description, ...hoursByDa
     await untilLoadingDone()
 
     const tableView = await waitFor('div[data-u4id="abw-pcb-timesheet-grid-view"]')
-    const inputRow = await waitFor('table[data-u4id="descriptionEditor"] input', tableView)
-    inputRow.value = description
-
-    for (let day = 1; day <= hoursByDay.length; day++) {
-        let amount = hoursByDay[day - 1]
-        if (amount === '' || isNaN(parseFloat(amount))) {
-            console.warn(`Got amount '${amount}' which is not a number, skipping`)
-            continue;
-        }
-        const amountInput = $(`input[name="regValue${day}"]`) // regValue1 is first day
-        // Does this hold true for week that starts at wednesday? Like 1. july 2018.
-        amountInput.value = amount
-    }
+    const descriptionInput = await waitFor('table[data-u4id="descriptionEditor"] input', tableView)
+    descriptionInput.value = description
 }
 
 function $ (selector, element = document) {
@@ -94,6 +113,11 @@ function $ (selector, element = document) {
 }
 function $$ (selector, element = document) {
     return Array.from(element.querySelectorAll(selector))
+}
+function getByText (selector, text, element = document) {
+    return $$(selector, element)
+        .filter(e => e.innerText)
+        .find(el => el.innerText.toLowerCase().indexOf(text.toLowerCase()) === 0)
 }
 function toArray (arrayLike) {
     return arrayLike ? Array.from(arrayLike) : []
@@ -115,6 +139,9 @@ function waitFor (selector, parent) {
             }
         }, 100)
     })
+}
+function sleep (ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
 }
 function untilLoadingDone (timeout = 2000) {
     let hasBeenLoading = isLoading()
