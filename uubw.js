@@ -117,7 +117,10 @@ function $$ (selector, element = document) {
 function getByText (selector, text, element = document) {
     return $$(selector, element)
         .filter(e => e.innerText)
-        .find(el => el.innerText.toLowerCase().indexOf(text.toLowerCase()) === 0)
+        .find(el => startsWith(el.innerText, text))
+}
+function startsWith(text, start) {
+    return text.trim().toLowerCase().indexOf(start.toLowerCase()) === 0
 }
 function toArray (arrayLike) {
     return arrayLike ? Array.from(arrayLike) : []
