@@ -19,8 +19,8 @@ document.addEventListener('drop', async event => {
 function timesheetIsActive () {
     return $$('a.u4-activitybreadcrumbitem-button')
         .filter(isVisible)
-        .map(el => el.outerText.trim())
-        .some(text => text.includes('Timeliste '))
+        .map(el => el.innerText.trim())
+        .some(text => text.includes('Timeliste'))
 }
 
 function readFile (file) {
@@ -174,7 +174,7 @@ function untilLoadingDone (timeout = 2000) {
 }
 function isLoading () {
     return $$('.x-mask-msg-text')
-        .filter(e => e.outerText.trim() === 'Laster...')
+        .filter(e => e.innerText.trim() === 'Laster...')
         .some(isVisible)
 }
 function isVisible (element) {
