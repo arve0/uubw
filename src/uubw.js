@@ -92,14 +92,13 @@ async function addRow (workorder, activity, description) {
 
     const codeElement = await waitFor(`[data-qtip="${workorder}"]`)
     codeElement.click()
-    await untilLoadingDone()
 
     if (activity !== '-' && activity !== '') {
         const activityElement = await waitFor(`[data-recordid="${activity}"]`)
         activityElement.click()
     }
 
-    const addCodeElement = await waitFor('[data-u4id="addToTimesheetBtn"]')
+    const addCodeElement = await waitFor('[data-u4id="addToTimesheetBtn"]:not(.x-disabled)')
     addCodeElement.click()
     await untilLoadingDone()
 
