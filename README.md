@@ -7,23 +7,18 @@ Importer timeliste til UBW fra tekstfil med [tab-separerte verdier](https://en.w
 
 ## Installere
 
-1. Klon uubw: `git clone https://github.com/arve0/uubw`
-
-eller
-
-1. [Last ned uubw](https://github.com/arve0/uubw/archive/master.zip).
-2. Pakk ut zip-filen.
-
 ### Firefox
-3. Gå til about:debugging.
-4. Trykk på *Load Temporary Add-on*.
-5. Velg `manifest.json` i mappen til uubw.
+1. [Last ned uubw](https://github.com/arve0/uubw/releases) (`.xpi`).
+2. Gå til `about:addons`.
+3. Trykk tannhjulet → *Innstaller utvidelse fra fil*.
+4. Velg den nedlastede xpi-filen.
 
 ### Chrome
-3. Gå til chrome://extensions/.
-4. Slå på utviklermodus.
-5. Trykk på *Last inn upakket*.
-6. Velg mappen til uubw.
+1. Klon uubw: `git clone https://github.com/arve0/uubw`
+2. Gå til chrome://extensions/.
+3. Slå på utviklermodus.
+4. Trykk på *Last inn upakket*.
+5. Velg mappen til uubw.
 
 
 ## Bruk
