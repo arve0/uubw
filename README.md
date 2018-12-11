@@ -74,6 +74,10 @@ Tilsvarende blir det for kort uke, bare med færre kolonner i TSV-filen. Om en f
 for mange kolonner, vil UBW vise summen, men når en lagrer valideres og korrigeres
 timelisten.
 
+## Utvikler
+
+Kjør `npm start`, så åpner Firefox med automatisk reload av plugin. Dog, du må oppdatere
+UBW for å content-scriptet skal bli lastet inn på nytt ved endringer.
 
 ## Lisens
 
