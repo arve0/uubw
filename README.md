@@ -8,10 +8,9 @@ Importer timeliste til UBW fra tekstfil med [tab-separerte verdier](https://en.w
 ## Installere
 
 ### Firefox
-1. [Last ned uubw](https://github.com/arve0/uubw/releases) (`.xpi`).
-2. Gå til `about:addons`.
-3. Trykk tannhjulet → *Innstaller utvidelse fra fil*.
-4. Velg den nedlastede xpi-filen.
+1. [Gå til releases](https://github.com/arve0/uubw/releases).
+2. Trykk på `.xpi`-filen.
+3. Godta installasjon og gi tilgang til `https://ubw.unit4cloud.com/*`.
 
 ### Chrome
 1. Klon uubw: `git clone https://github.com/arve0/uubw`
