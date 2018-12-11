@@ -2,7 +2,7 @@
 
 Importer timeliste til UBW fra tekstfil med [tab-separerte verdier](https://en.wikipedia.org/wiki/Tab-separated_values).
 
-[![](youtube.png)](https://www.youtube.com/watch?v=vziWaZY4MsQ)
+[![](youtube.png)](https://youtu.be/7A0FnSPxNN8)
 
 
 ## Installere
