@@ -6,7 +6,7 @@
     "content_scripts": [
         {
             "matches": [ "https://ubw.unit4cloud.com/*" ],
-            "js": [ "uubw.js" ]
+            "js": [ "toggl_til_tsv.js", "uubw.js" ]
         }
     ]
 }

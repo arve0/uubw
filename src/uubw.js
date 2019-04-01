@@ -7,13 +7,17 @@ document.addEventListener('drop', async event => {
     }
     event.preventDefault()
 
-    const tsv = toArray(event.dataTransfer.items).find(i => i.type === 'text/tab-separated-values')
-    if (!tsv) {
-        return console.warn('Fant ingen TSV fil, gjør ingenting.')
+    const file = toArray(event.dataTransfer.items).find(i => i.type === 'text/tab-separated-values' || i.type === 'text/csv')
+    if (!file) {
+        return console.warn('Fant ingen CSV eller TSV fil, avbryter.')
     }
 
-    const contents = await readFile(tsv.getAsFile())
-    fillTimesheet(contents)
+    const contents = await readFile(file.getAsFile())
+    const tsv = file.type === 'text/csv'
+        ? toggl_til_tsv(contents)
+        : contents
+
+    fillTimesheet(tsv)
 })
 
 function timesheetIsActive () {
