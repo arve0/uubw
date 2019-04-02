@@ -98,10 +98,9 @@ for mange kolonner, vil UBW vise summen, men når en lagrer valideres og korrige
 timelisten.
 
 
-
 ## Utvikler
-Kjør `npm start`, så åpner Firefox med automatisk reload av plugin. Dog, du må oppdatere
-UBW for at content-scriptet skal bli lastet inn på nytt ved endringer.
+Kjør `npm start`, så åpner Firefox med automatisk reload av plugin. Ved endringer
+vil content-scriptet stoppes og oppdateres.
 
 
 ## Lisens
