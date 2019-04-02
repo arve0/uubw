@@ -44,7 +44,12 @@ async function fillTimesheet(tsv) {
         )
 
     for (const entry of timesheetEntries) {
-        await fillTimesheetRow(entry)
+        try {
+            await fillTimesheetRow(entry)
+        } catch (err) {
+            console.error(err)
+            alert(err.message)
+        }
     }
 }
 
@@ -52,8 +57,7 @@ async function fillTimesheetRow([ workorder, activity, description, ...hoursByDa
     console.log([ workorder, activity, description, ...hoursByDay ].join(', '))
 
     if (workorder === '') {
-        console.warn('Got empty workorder, skipping.')
-        return;
+        throw new Error(`Ingen timekode for '${description}', hopper over.`)
     }
 
     if (workorder.indexOf('ABSENCE') === 0) {
@@ -67,7 +71,7 @@ async function fillTimesheetRow([ workorder, activity, description, ...hoursByDa
         if (amount === '') {
             continue;
         } else if (isNaN(parseFloat(amount))) {
-            console.warn(`Got amount '${amount}' which is not a number, skipping`)
+            alert(`Forventet et tall, men fikk '${amount}'. Hopper over,`)
             continue;
         }
         const amountInput = $(`input[name="regValue${day}"]`) // regValue1 is first day
@@ -98,8 +102,14 @@ async function addRow (workorder, activity, description) {
     codeElement.click()
 
     if (activity !== '-' && activity !== '') {
-        const activityElement = await waitFor(`[data-recordid="${activity}"]`)
-        activityElement.click()
+        try {
+            const activityElement = await waitFor(`[data-recordid="${activity}"]`)
+            activityElement.click()
+        } catch (err) {
+            alert(`Ventet på aktivitet '${activity}', men aktiviteten dukket ikke opp.\n\n` +
+                  `Velg riktig aktivitet for '${description}' innen 5 sekunder.`)
+            await sleep(5 * 1000)
+        }
     }
 
     const addCodeElement = await waitFor('[data-u4id="addToTimesheetBtn"]:not(.x-disabled)')
@@ -136,10 +146,12 @@ function click (element) {
     }
 }
 function waitFor (selector, parent) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => reject(`Ventet på ${selector}, men den dukket ikke opp.`), 5 * 1000)
         const interval = setInterval(() => {
             const element = $(selector, parent)
             if (element !== null) {
+                clearTimeout(timeout)
                 clearInterval(interval)
                 resolve(element)
             }

@@ -94,7 +94,8 @@
             const rounded_sum = entries_this_day.reduce((sum, { hours_rounded }) => sum + hours_rounded, 0)
 
             if (Math.round(2 * exact_sum) / 2 !== rounded_sum) {
-                alert(`!! ADVARSEL: Mulig avrundingsfeil funnet for ${pretty_date(day)}. Avrundet sum ${rounded_sum} er ikke lik eksakt sum ${exact_sum.toFixed(2)} avrundet !!`)
+                alert(`ADVARSEL: Mulig avrundingsfeil funnet for ${pretty_date(day)}\n\n` +
+                      `Avrundet sum '${rounded_sum}' er ikke lik eksakt sum '${exact_sum.toFixed(2)}' avrundet.`)
             }
         })
     }
@@ -109,8 +110,6 @@
         const number_of_days = number_of_days_since(last_day, first_day) + 1
 
         lines.push([';Arbeidsordre', 'Aktivitet', 'Beskrivelse', ...(get_days(first_day, number_of_days))])
-        lines.push(['ABSENCE-1', '', 'Lunsj for de med 7,5 timer fakturerbart', ...(new Array(number_of_days).fill('0,5'))])
-        lines.push(['ABSENCE-2', '', 'Lunsjpenger', ...(new Array(number_of_days).fill('1'))])
 
         time_entries.forEach(time_entry => {
             let line
@@ -123,6 +122,11 @@
             let n_day = number_of_days_since(time_entry.start_date, first_day)
             line[3 + n_day] += time_entry.hours_rounded
         })
+
+        if (confirm("Legge til 0,5t lunsj og lunjspenger for dagene du har jobbet?")) {
+            lines.push(['ABSENCE-1', '', 'Lunsj for de med 7,5 timer fakturerbart', ...(new Array(number_of_days).fill('0,5'))])
+            lines.push(['ABSENCE-2', '', 'Lunsjpenger', ...(new Array(number_of_days).fill('1'))])
+        }
 
         return lines
     }

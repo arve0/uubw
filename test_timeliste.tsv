@@ -1,0 +1,9 @@
+; For bruk til testing
+;arbeidsordre	aktivitet	beskrivelse	man	tirs	ons	...
+		rad uten timekode	1
+	1	rad2 uten timekode		2
+32010000-1	11	rad med feil aktivitetskode			3
+32010000-1	-	rad med feil formatert timer			fire
+32010000-1	-	OK rad				5
+ABSENCE     	-       	Lunsj for de med	0,5	0,5	0,5	0,5	0,5
+ABSENCE     	-       	Lunsjpenger     	1 	1 	1 	1 	1
