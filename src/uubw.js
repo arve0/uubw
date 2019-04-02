@@ -12,10 +12,15 @@ document.addEventListener('drop', async event => {
         return console.warn('Fant ingen CSV eller TSV fil, avbryter.')
     }
 
-    const contents = await readFile(file.getAsFile())
-    const tsv = file.type === 'text/csv'
-        ? toggl_til_tsv(contents)
-        : contents
+    try {
+        const contents = await readFile(file.getAsFile())
+        const tsv = file.type === 'text/csv'
+            ? toggl_til_tsv(contents)
+            : contents
+    } catch (err) {
+        alert(`Problem med fil: ${err.message}`)
+        return
+    }
 
     fillTimesheet(tsv)
 })

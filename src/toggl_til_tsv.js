@@ -44,7 +44,7 @@
             const columns_numbers = columns_to_pick.map(col => labels.indexOf(col))
             columns_numbers.forEach((i, ii) => {
                 if (i === -1) {
-                    throw new Error(`Konvertering av CSV feilet, fant ikke kolonnen ${columns_to_pick[ii]}.`)
+                    throw new Error(`Konvertering av CSV feilet, fant ikke kolonnen '${columns_to_pick[ii]}'.`)
                 }
             })
 
@@ -71,7 +71,7 @@
     function get_regex_group(str, regex, fail_hard = false) {
         const match = str.match(regex)
         if (fail_hard && match === null) {
-            throw new Error(`Konvertering av CSV feilet, fant ikke ${regex} i taggene: ${str}`)
+            throw new Error(`Konvertering av CSV feilet, fant ikke '${regex}' i taggene '${str}'`)
         } else if (match === null) {
             return ''
         }
