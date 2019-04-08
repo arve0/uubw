@@ -12,9 +12,10 @@ document.addEventListener('drop', async event => {
         return console.warn('Fant ingen CSV eller TSV fil, avbryter.')
     }
 
+    let tsv
     try {
         const contents = await readFile(file.getAsFile())
-        const tsv = file.type === 'text/csv'
+        tsv = file.type === 'text/csv'
             ? toggl_til_tsv(contents)
             : contents
     } catch (err) {
