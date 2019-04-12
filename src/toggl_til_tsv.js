@@ -123,8 +123,8 @@
         })
 
         if (confirm("Legge til 0,5t lunsj og lunjspenger for dagene du har jobbet?")) {
-            lines.push(['ABSENCE-1', '', 'Lunsj for de med 7,5 timer fakturerbart', ...(new Array(number_of_days).fill('0,5'))])
-            lines.push(['ABSENCE-2', '', 'Lunsjpenger', ...(new Array(number_of_days).fill('1'))])
+            lines.push(['ABSENCE-1', '', 'Lunsj for de med 7,5 timer fakturerbart', ...(new Array(number_of_days).fill(0.5))])
+            lines.push(['ABSENCE-2', '', 'Lunsjpenger', ...(new Array(number_of_days).fill(1))])
         }
 
         return lines

@@ -19,7 +19,7 @@ document.addEventListener('drop', async event => {
             ? toggl_til_tsv(contents)
             : contents
     } catch (err) {
-        alert(`Problem med fil: ${err.message}`)
+        alert(`Konvertering av CSV feilet: ${err.message}`)
         return
     }
 
