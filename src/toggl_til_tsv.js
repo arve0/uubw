@@ -8,9 +8,9 @@
             .filter(l => l.length > 0)
             .map(to_time_entry(labels))
 
-        notify_if_rounding_error_in_hours_sum(time_entries)
-
         const tsv = time_entries_to_tsv(time_entries)
+        round_to_nearest_half_hour_and_notify_if_rounding_error(tsv)
+
         return tsv.map(line =>
             line.map(col => typeof col === 'number'
                 ? col === 0 ? '' : col.toFixed(1).replace('.', ',')
@@ -55,7 +55,7 @@
                 }
                 return acc
             }, {})
-            time_entry = calculate_time_in_hours_and_round_to_nearest_half_hour(time_entry)
+            time_entry = calculate_time_in_hours_decimal(time_entry)
             return tags_to_timekode_and_aktivitet(time_entry)
         }
     }
@@ -78,10 +78,9 @@
         return match[1]
     }
 
-    function calculate_time_in_hours_and_round_to_nearest_half_hour(time_entry) {
+    function calculate_time_in_hours_decimal(time_entry) {
         let [hours, minutes, seconds] = time_entry.duration.split(':').map(n => parseInt(n))
         time_entry.hours_exact = (hours + minutes / 60 + seconds / 60 / 60)
-        time_entry.hours_rounded = Math.round(2 * time_entry.hours_exact) / 2
         return time_entry
     }
 
@@ -120,7 +119,7 @@
                 lines.push(line)
             }
             let n_day = number_of_days_since(time_entry.start_date, first_day)
-            line[3 + n_day] += time_entry.hours_rounded
+            line[3 + n_day] += time_entry.hours_exact
         })
 
         if (confirm("Legge til 0,5t lunsj og lunjspenger for dagene du har jobbet?")) {
@@ -162,19 +161,34 @@
         return [time_entry.timekode, time_entry.aktivitet, time_entry.description, ...(new Array(number_of_days).fill(0))]
     }
 
-    function get_year_and_week() {
-        // https://stackoverflow.com/questions/6117814/get-week-of-year-in-javascript-like-in-php/6117889#6117889
-        let d = new Date();
-        // Set to nearest Thursday: current date + 4 - current day number
-        // Make Sunday's day number 7
-        d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
-        // Get first day of year
-        var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
-        // Calculate full weeks to nearest Thursday
-        var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
-        // Return array of year and week number
-        return [d.getUTCFullYear(), weekNo];
+    function round_to_nearest_half_hour_and_notify_if_rounding_error(tsv) {
+        //Arbeidsordre	Aktivitet	Beskrivelse	Mandag	Tirsdag	Onsdag	Torsdag	Fredag
+        const [ordre, aktivitet, beskrivelse, ...days] = tsv[0]
+
+        for (let n_day = 0; n_day < days.length; n_day++) {
+            const day_exact_sum = sum_day(tsv, n_day)
+            tsv.forEach(line => {
+                line[3 + n_day] = round(line[3 + n_day])
+            })
+            const day_rounded_sum = sum_day(tsv, n_day)
+
+            if (round(day_exact_sum) !== day_rounded_sum) {
+                alert(`ADVARSEL: Mulig avrundingsfeil funnet for ${days[n_day]}\n\n` +
+                      `Avrundet sum '${day_rounded_sum}' er ikke eksakt lik totalen '${day_exact_sum.toFixed(2)}' avrundet.`)
+            }
+        }
     }
+
+    function sum_day(tsv, n_day) {
+        return tsv.filter(([ordre, ...rest]) => ordre[0] !== ';')
+            .map(l => l[3 + n_day])
+            .reduce((sum, n) => sum + n, 0)
+    }
+
+    function round(n) {
+        return Math.round(n * 2) / 2
+    }
+
 
 })(window);
 

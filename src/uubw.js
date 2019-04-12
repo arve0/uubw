@@ -153,7 +153,7 @@ function click (element) {
 }
 function waitFor (selector, parent) {
     return new Promise((resolve, reject) => {
-        const timeout = setTimeout(() => reject(`Ventet på ${selector}, men den dukket ikke opp.`), 5 * 1000)
+        const timeout = setTimeout(() => reject(new Error(`Ventet på ${selector}, men den dukket ikke opp.`)), 5 * 1000)
         const interval = setInterval(() => {
             const element = $(selector, parent)
             if (element !== null) {
