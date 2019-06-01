@@ -11,18 +11,18 @@
         const tsv = time_entries_to_tsv(time_entries)
         round_to_nearest_half_hour_and_notify_if_rounding_error(tsv)
 
+
+        const locale_decimal_separator = get_locale_decimal_separator();
         return tsv.map(line =>
             line.map(col => typeof col === 'number'
-                ? col === 0 ? '' : col.toFixed(1).replace('.', getLocaleDecimalSeparator())
+                ? col === 0 ? '' : col.toFixed(1).replace('.', locale_decimal_separator)
                 : col
             ).join('\t')
         ).join('\n')
     }
-    
-    function getLocaleDecimalSeparator() {
-        var n = 1.1;
-        n = n.toLocaleString().substring(1, 2);
-        return n;
+
+    function get_locale_decimal_separator() {
+        return 1.1.toLocaleString(navigator.language).substring(1, 2)
     }
 
     function split_csv_line(str) {
