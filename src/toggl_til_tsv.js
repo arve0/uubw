@@ -13,10 +13,16 @@
 
         return tsv.map(line =>
             line.map(col => typeof col === 'number'
-                ? col === 0 ? '' : col.toFixed(1).replace('.', ',')
+                ? col === 0 ? '' : col.toFixed(1).replace('.', getLocaleDecimalSeparator())
                 : col
             ).join('\t')
         ).join('\n')
+    }
+    
+    function getLocaleDecimalSeparator() {
+        var n = 1.1;
+        n = n.toLocaleString().substring(1, 2);
+        return n;
     }
 
     function split_csv_line(str) {
