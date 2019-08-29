@@ -83,6 +83,8 @@ async function fillTimesheetRow([ workorder, activity, description, ...hoursByDa
         const amountInput = $(`input[name="regValue${day}"]`) // regValue1 is first day
         // Does this hold true for week that starts at wednesday? Like 1. july 2018.
         amountInput.value = amount
+        // issue 8, make sure input is saved to state
+        amountInput.dispatchEvent(new Event('keyup'))
     }
     await sleep(500)
 }
@@ -125,6 +127,7 @@ async function addRow (workorder, activity, description) {
     const tableView = await waitFor('div[data-u4id="abw-pcb-timesheet-grid-view"]')
     const descriptionInput = await waitFor('table[data-u4id="descriptionEditor"] input', tableView)
     descriptionInput.value = description
+    descriptionInput.dispatchEvent(new Event('keyup'))
 }
 
 function $ (selector, element = document) {
