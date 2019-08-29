@@ -102,6 +102,19 @@ timelisten.
 Kjør `npm start`, så åpner Firefox med automatisk reload av plugin. Ved endringer
 vil content-scriptet stoppes og oppdateres.
 
+### Publisere
+1. Lag [API credentials hos mozilla](https://addons.mozilla.org/en-US/developers/addon/api/key/).
+2. Opprett filen *credentials.sh* med *JWT issuer* og *JWT secret*:
+
+```sh
+MOZ_API_KEY="user:12345678:90" # JWT issuer
+MOZ_API_SECRET="...."          # JWT secret
+```
+
+3. Endre versjonsnummer i [manifest.json](./src/manifest.json).
+4. Bygg, `npm run build`.
+5. Signer, `npm run sign`.
+6. Addon er nå i mappen *web-ext-artifacts*.
 
 ## Lisens
 Copyright Arve Seljebu
