@@ -90,21 +90,6 @@
         return time_entry
     }
 
-    function notify_if_rounding_error_in_hours_sum(time_entries) {
-        const days = new Set(time_entries.map(e => e.start_date))
-
-        days.forEach(day => {
-            const entries_this_day = time_entries.filter(e => e.start_date === day)
-            const exact_sum = entries_this_day.reduce((sum, { hours_exact }) => sum + hours_exact, 0)
-            const rounded_sum = entries_this_day.reduce((sum, { hours_rounded }) => sum + hours_rounded, 0)
-
-            if (Math.round(2 * exact_sum) / 2 !== rounded_sum) {
-                alert(`ADVARSEL: Mulig avrundingsfeil funnet for ${pretty_date(day)}\n\n` +
-                      `Avrundet sum '${rounded_sum}' er ikke lik eksakt sum '${exact_sum.toFixed(2)}' avrundet.`)
-            }
-        })
-    }
-
     function time_entries_to_tsv(time_entries) {
         //Arbeidsordre	Aktivitet	Beskrivelse	Mandag	Tirsdag	Onsdag	Torsdag	Fredag
         const lines = []
@@ -179,8 +164,12 @@
             const day_rounded_sum = sum_day(tsv, n_day)
 
             if (round(day_exact_sum) !== day_rounded_sum) {
-                alert(`ADVARSEL: Mulig avrundingsfeil funnet for ${days[n_day]}\n\n` +
-                      `Avrundet sum '${day_rounded_sum}' er ikke eksakt lik totalen '${day_exact_sum.toFixed(2)}' avrundet.`)
+                const continue_ = confirm(`ADVARSEL: Mulig avrundingsfeil funnet for ${days[n_day]}\n\n` +
+                      `Avrundet sum '${day_rounded_sum}' er ikke eksakt lik totalen '${day_exact_sum.toFixed(2)}' avrundet. Fortsette?`)
+
+                if (!continue_) {
+                    throw new Error("Import avbrutt.")
+                }
             }
         }
     }
