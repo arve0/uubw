@@ -97,6 +97,17 @@ Tilsvarende blir det for kort uke, bare med færre kolonner i TSV-filen. Om en f
 for mange kolonner, vil UBW vise summen, men når en lagrer valideres og korrigeres
 timelisten.
 
+### Konvertere fra CSV til TSV
+Om du ønsker å summere og legge sammen timer fra Toggl, kan det gjøres med
+scriptet [toggl_til_tsv](./toggl_til_tsv):
+
+```sh
+$ ./toggl_til_tsv ~/Downloads/Toggl_time_entries_2019-11-18_to_2019-11-24.csv
+Legge til 0,5t lunsj og lunjspenger for dagene du har jobbet? [y/n]: y
+timeliste-2019-48.tsv created
+Deleting /Users/arve/Downloads/Toggl_time_entries_2019-11-18_to_2019-11-24.csv
+```
+
 
 ## Utvikler
 Kjør `npm start`, så åpner Firefox med automatisk reload av plugin. Ved endringer

@@ -22,7 +22,11 @@
     }
 
     function get_locale_decimal_separator() {
-        return 1.1.toLocaleString(navigator.language).substring(1, 2)
+        if (typeof navigator !== 'undefined') {
+            return 1.1.toLocaleString(navigator.language).substring(1, 2)
+        } else {
+            return ','
+        }
     }
 
     function split_csv_line(str) {
@@ -158,7 +162,10 @@
 
         for (let n_day = 0; n_day < days.length; n_day++) {
             const day_exact_sum = sum_day(tsv, n_day)
-            tsv.forEach(line => {
+            tsv.forEach((line, index) => {
+                if (index === 0) {
+                    return;
+                }
                 line[3 + n_day] = round(line[3 + n_day])
             })
             const day_rounded_sum = sum_day(tsv, n_day)
@@ -185,5 +192,8 @@
     }
 
 
-})(window);
+})(typeof window !== 'undefined'
+    ? window
+    : global
+);
 
