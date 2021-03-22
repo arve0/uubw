@@ -6,6 +6,6 @@
   },
   "dependencies": {
     "readline-sync": "^1.4.10",
-    "web-ext": "^3.2.1"
+    "web-ext": "^6.0.0"
   }
 }
